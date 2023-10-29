@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/include/logger.h
+lockqueue.h
+../src/include/lockqueue.h
+string
+-
+
+/home/leslie/project/mprpc/src/logger.cc
+logger.h
+/home/leslie/project/mprpc/src/logger.h
+time.h
+-
+iostream
+-
+
