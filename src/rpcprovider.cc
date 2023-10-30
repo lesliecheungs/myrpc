@@ -1,8 +1,11 @@
 #include "rpcprovider.h"
 #include "mprpcapplication.h"
 #include "rpcheader.pb.h"
+#include "zookeeperutil.h"
 
-
+// 切换到~/project/zookeeper-3.4.10/bin
+// 先运行zkserver =》./zkServer.sh start 
+// 再运行客户端 =》./zkCli.sh
 /**
  * service_name => service描述
  *                         => service* 记录服务对象
@@ -52,6 +55,26 @@ void RpcProvider::Run()
     // 设置muduo库的线程数量
     server.setThreadNum(4);
 
+    // 把当前rpc节点上要发布的服务全部注册到zk上面，让rpc client可以从zk上发现服务
+    ZkClient zkCli;
+    zkCli.start();
+    // service_name为永久性节点 method_name为临时性节点
+    for(auto& sp : m_serviceMap)
+    {
+        //  /service_name => /UserServiceRpc
+        std::string service_path = "/" + sp.first;
+        zkCli.create(service_path.c_str(), nullptr, 0);
+        for(auto &mp: sp.second.m_methodMap) 
+        {
+            // /service_name/method  => /UserServiceRpc/Login 存储当前这个rpc服务节点主机的ip和port
+            std::string method_path = service_path + "/" + mp.first;
+            char method_path_data[128] = {0};
+            sprintf(method_path_data, "%s:%d", ip.c_str(), port);
+            // ZOO_EPHERAL表示znode是一个临时性节点（RPC挂掉，自然需要被zk删除掉对应节点）
+            zkCli.create(method_path.c_str(), method_path_data, strlen(method_path_data), ZOO_EPHEMERAL);
+        }
+
+    }
     std::cout << "RpcProvider start service at ip: " << ip << " port: " << port << std::endl;
     server.start();
     m_eventLoop.loop();
