@@ -1,20 +1,23 @@
 #include "mprpcchannel.h"
-#include <string>
+#include "mprpcapplication.h"
 #include "rpcheader.pb.h"
+#include "mpnacosservice.h"
+
+#include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <errno.h>
-#include "mprpcapplication.h"
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <unistd.h>
-
+#include <list>
+#include <iostream>
 
 /**
+ * 所有通过stub代理对象调用的rpc方法，都走到这里了，统一作rpc方法调用的数据序列化和网络发送
  * header_size + service_name + method_name args_size + args
 */
-// 所有通过stub代理对象调用的rpc方法，都走到这里了，统一作rpc方法调用的数据序列化和网络发送
 void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
                           google::protobuf::RpcController* controller, 
                           const google::protobuf::Message* request,
@@ -81,8 +84,22 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         return;
     }
 
-    std::string ip = MprpcApplication::GetInstance().GetConfig().Load("rpcserverip");
-    uint16_t port = atoi(MprpcApplication::GetInstance().GetConfig().Load("rpcserverport").c_str());
+    // ------此处通过nacosConfig读取配置信息
+    // std::string ip = MprpcApplication::GetInstance().GetConfig().Load("rpcserverip");
+    // uint16_t port = atoi(MprpcApplication::GetInstance().GetConfig().Load("rpcserverport").c_str());
+
+    std::string nacosconfigip = MprpcApplication::GetInstance().GetConfig().Load("nacosconfigip");
+    std::string nacosconfigport = MprpcApplication::GetInstance().GetConfig().Load("nacosconfigport");
+    std::cout << nacosconfigip << " " << nacosconfigport << std::endl;
+    MpNacosService mcf(nacosconfigip, nacosconfigport, true);
+
+    std::list <Instance> instances = mcf.getAllServiceNaming(method_name);
+
+    std::cout << "----------------------------------------------------" << std::endl;
+    std::string ip = instances.begin()->ip;
+    uint16_t port = instances.begin()->port;
+    std::cout << "server ip: " << ip << " server port: " << port << std::endl;
+    // -----------------------------------------------------
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
@@ -122,7 +139,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         controller->SetFailed(errtxt);
         return;
     }
-
+    
     // 反序列化rpc调用的响应数据
     // std::string response_str(recv_buf, 0, recv_size); // 存在/0问题
     //if(!response->ParseFromString(response_str))
@@ -136,6 +153,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         controller->SetFailed(errtxt);
         return;
     }
-  
+    
+
     close(clientfd);
 }

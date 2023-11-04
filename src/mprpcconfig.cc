@@ -1,9 +1,12 @@
 #include "mprpcconfig.h"
 
 #include <iostream>
-// 负责解析加载配置文件
+#include <string>
+
+// 加载配置文件并且保存到m_configMap
 void MprpcConfig::LoadConfigFile(const char* config_file)
 {
+    // 1. 先通过本地文件加载nacos的基本配置
     FILE *pf = fopen(config_file, "r");
     if(pf == nullptr)
     {
@@ -40,7 +43,7 @@ void MprpcConfig::LoadConfigFile(const char* config_file)
         std::string value;
         key = read_buf.substr(0, idx);
         Trim(key);
-        // rpcserverip=127.0.0.1\n
+
         int endidx = read_buf.find('\n', idx);
         value = read_buf.substr(idx+1, endidx-idx-1);
         Trim(value);
@@ -49,7 +52,18 @@ void MprpcConfig::LoadConfigFile(const char* config_file)
 
     fclose(pf);
     
+    // 2. 通过nacos来加载服务发现中心的基本配置
+    std::string nacosserviceIp = m_configMap["nacosserviceIp"];
+    std::string nacosservicePort = m_configMap["nacosservicePort"];
+    std::string isclient = m_configMap["isclient"];
+    MpNacosService mcf(nacosserviceIp, nacosservicePort, isclient.empty()? 0:1);
+    
+    std::string mongoSocket = mcf.GetConfig("MongoSocket");
+    std::string localservername = mcf.GetConfig("localservername");
+    m_configMap.insert({"MongoSocket", mongoSocket});
+    m_configMap.insert({"localservername", localservername});
 }
+
 
 // 查询配置信息
 std::string MprpcConfig::Load(const std::string& key)

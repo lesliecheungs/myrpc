@@ -1,10 +1,14 @@
-#include <iostream>
-#include <string>
-#include "../user.pb.h"
+#include "../entrywebserver.pb.h"
 #include "mprpcapplication.h"
 #include "rpcprovider.h"
 
-class UserService : public fixbug::UserServiceRpc
+#include <iostream>
+#include <string>
+
+/**
+ * 这是一个服务器基于mprpc框架发布服务的demo
+*/
+class UserService : public fixbug::EntryWebServer
 {
 public:
     bool Login(std::string name, std::string pwd)

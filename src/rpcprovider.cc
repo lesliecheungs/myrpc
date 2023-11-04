@@ -1,17 +1,17 @@
 #include "rpcprovider.h"
 #include "mprpcapplication.h"
 #include "rpcheader.pb.h"
+#include "mpnacosservice.h"
 
-
-/**
+/**这里是框架提供给外部使用的，可以发布rpc方法的函数接口
  * service_name => service描述
  *                         => service* 记录服务对象
 */
-// 这里是框架提供给外部使用的，可以发布rpc方法的函数接口
 void RpcProvider::NotifyService(google::protobuf::Service *service)
 {
+    
     ServiceInfo service_info;
-
+    
     // 获取服务对象的描述信息
     const google::protobuf::ServiceDescriptor *pserviceDesc = service->GetDescriptor();
 
@@ -21,6 +21,8 @@ void RpcProvider::NotifyService(google::protobuf::Service *service)
     // 获取服务对象service的方法数量
     int methodCnt = pserviceDesc->method_count();
 
+    std::cout << "----------------------------" << std::endl;
+    std::cout << "提供的服务与方法： " << service_name << std::endl;
     std::cout << "service_name: " << service_name << std::endl;
     for(int i = 0; i < methodCnt; i++)
     {
@@ -28,9 +30,9 @@ void RpcProvider::NotifyService(google::protobuf::Service *service)
         const google::protobuf::MethodDescriptor* pmethodDesc = pserviceDesc->method(i);
         std::string method_name = pmethodDesc->name();
         service_info.m_methodMap.insert({method_name, pmethodDesc});
+        
         std::cout << "method_name: " << method_name << std::endl;
     }
-
     service_info.m_service = service;
     m_serviceMap.insert({service_name, service_info});
 }
@@ -38,12 +40,14 @@ void RpcProvider::NotifyService(google::protobuf::Service *service)
 // 启动rpc服务节点，开始提供rpc远程网络调用服务
 void RpcProvider::Run()
 {
-    std::string ip = MprpcApplication::GetInstance().GetConfig().Load("rpcserverip");
-    uint16_t port = atoi(MprpcApplication::GetInstance().GetConfig().Load("rpcserverport").c_str());
+    std::string localservername = MprpcApplication::GetInstance().GetConfig().Load("localservername");
+    std::string ip = MprpcApplication::GetInstance().GetConfig().Load("localserverip");
+    uint16_t port = atoi(MprpcApplication::GetInstance().GetConfig().Load("localserverport").c_str());
+    
     muduo::net::InetAddress address(ip, port);
 
     // 创建TcpServer对象
-    muduo::net::TcpServer server(&m_eventLoop, address, "RpcProvider");
+    muduo::net::TcpServer server(&m_eventLoop, address, localservername);
 
     // 绑定连接回调和消息读写回调方法
     server.setConnectionCallback(std::bind(&RpcProvider::OnConnection, this, std::placeholders::_1));
@@ -52,9 +56,32 @@ void RpcProvider::Run()
     // 设置muduo库的线程数量
     server.setThreadNum(4);
 
+
+    // 将本地服务上传到NacosServiceNaming
     std::cout << "RpcProvider start service at ip: " << ip << " port: " << port << std::endl;
+    std::string nacosconfigip = MprpcApplication::GetInstance().GetConfig().Load("nacosserviceip");
+    std::string nacosconfigport = MprpcApplication::GetInstance().GetConfig().Load("nacosserviceport");
+    // std::cout << "nacosconfigip start service at ip: " << nacosconfigip << " rpcappname: " << rpcappname << std::endl;
+    MpNacosService mcf(nacosconfigip, nacosconfigport);
+
+    for(auto& sp: m_serviceMap)
+    {
+        std::string service_name = sp.first;
+        for(auto &mp: sp.second.m_methodMap) 
+        {
+            std::string method_name = mp.first;
+            char method_path_data[128] = {0};
+            std::cout << service_name << " " << method_name << std::endl;
+
+            mcf.SetServiceNaming(method_name, ip, port);
+        }
+        
+    }
+    
+
     server.start();
     m_eventLoop.loop();
+    std::cout << "run end------" << std::endl;
 }
 
 // 新的socket连接回调
@@ -67,11 +94,11 @@ void RpcProvider::OnConnection(const muduo::net::TcpConnectionPtr& conn)
 }
 
 /**
+ * 已建立连接用户的读写事件回调，如果远程有一个rpc服务的调用请求，那么OnMessage方法就会响应
  * 在框架内部，rpcprovider和rpcconsumer协商好之间通信的protobuf数据类型
  * service_name method_name args
  * header_size(4字节) + header_str + args_str
 */
-// 已建立连接用户的读写事件回调，如果远程有一个rpc服务的调用请求，那么OnMessage方法就会响应
 void RpcProvider::OnMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net::Buffer* buffer, muduo::Timestamp)
 {
     // 网络上接收的远程rpc调用请求的字符流 Login args
@@ -140,7 +167,7 @@ void RpcProvider::OnMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
 
     google::protobuf::Message *response = service->GetResponsePrototype(method).New();
 
-    // 给下面的method方法的调用，绑定一个Closure的回调函数
+    // 给下面的method方法的调用，绑定一个Closure的回调函数，当被调用的方法完成后被回调
     google::protobuf::Closure *done = 
         google::protobuf::NewCallback<RpcProvider, 
                                     const muduo::net::TcpConnectionPtr&, 
@@ -156,6 +183,7 @@ void RpcProvider::SendRpcResponse(const muduo::net::TcpConnectionPtr& conn, goog
     std::string response_str;
     if(response->SerializeToString(&response_str))
     {
+        std::cout << "发送给客户端：" << response_str << std::endl;
         // 序列化成功后，通过rpc方法执行的结果发送回rpc的调用方
         conn->send(response_str);
     }

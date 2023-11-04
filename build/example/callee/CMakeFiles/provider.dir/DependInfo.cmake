@@ -4,20 +4,21 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/leslie/project/mprpc/example/user.pb.cc" "/home/leslie/project/mprpc/build/example/callee/CMakeFiles/provider.dir/__/user.pb.cc.o"
-  "/home/leslie/project/mprpc/example/callee/userservice.cc" "/home/leslie/project/mprpc/build/example/callee/CMakeFiles/provider.dir/userservice.cc.o"
+  "/home/yefimov/project/myrpc/example/entrywebserver.pb.cc" "/home/yefimov/project/myrpc/build/example/callee/CMakeFiles/provider.dir/__/entrywebserver.pb.cc.o"
+  "/home/yefimov/project/myrpc/example/callee/userservice.cc" "/home/yefimov/project/myrpc/build/example/callee/CMakeFiles/provider.dir/userservice.cc.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "/usr/local/include/nacos"
   "../src/include"
   "../example"
   )
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/home/leslie/project/mprpc/build/src/CMakeFiles/mprpc.dir/DependInfo.cmake"
+  "/home/yefimov/project/myrpc/build/src/CMakeFiles/mprpc.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

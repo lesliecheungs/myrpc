@@ -11,6 +11,10 @@ void ShowArgsHelp()
     std::cout << "format: command -i <configfile>" << std::endl;
 }
 
+/**
+ * 框架的初始化部分，先对命令行进行校验
+ * 然后调用m_config对本地配置文件以及nacosconfig进行配置
+*/
 void MprpcApplication::Init(int argc, char** argv)
 {
     // 1. 读取命令行
@@ -42,13 +46,8 @@ void MprpcApplication::Init(int argc, char** argv)
         }
     }
 
-    // 2.开始配置文件
+    // 3.nacosconfig
     m_config.LoadConfigFile(config_file.c_str());
-    
-    std::cout << "rpcserverip:" << m_config.Load("rpcserverip") << std::endl;
-    std::cout << "rpcserverport:" << m_config.Load("rpcserverport") << std::endl;
-    std::cout << "zookeeperip:" << m_config.Load("zookeeperip") << std::endl;
-    std::cout << "zookeeperport:" << m_config.Load("zookeeperport") << std::endl;
 }
 
 MprpcApplication& MprpcApplication::GetInstance()

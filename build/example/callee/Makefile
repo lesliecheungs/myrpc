@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/leslie/project/mprpc
+CMAKE_SOURCE_DIR = /home/yefimov/project/myrpc
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/leslie/project/mprpc/build
+CMAKE_BINARY_DIR = /home/yefimov/project/myrpc/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,14 +80,14 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/leslie/project/mprpc/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/leslie/project/mprpc/build/CMakeFiles /home/leslie/project/mprpc/build/example/callee/CMakeFiles/progress.marks
-	cd /home/leslie/project/mprpc/build && $(MAKE) -f CMakeFiles/Makefile2 example/callee/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/leslie/project/mprpc/build/CMakeFiles 0
+	cd /home/yefimov/project/myrpc/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/yefimov/project/myrpc/build/CMakeFiles /home/yefimov/project/myrpc/build/example/callee/CMakeFiles/progress.marks
+	cd /home/yefimov/project/myrpc/build && $(MAKE) -f CMakeFiles/Makefile2 example/callee/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/yefimov/project/myrpc/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/leslie/project/mprpc/build && $(MAKE) -f CMakeFiles/Makefile2 example/callee/clean
+	cd /home/yefimov/project/myrpc/build && $(MAKE) -f CMakeFiles/Makefile2 example/callee/clean
 .PHONY : clean
 
 # The main clean target
@@ -97,22 +97,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/leslie/project/mprpc/build && $(MAKE) -f CMakeFiles/Makefile2 example/callee/preinstall
+	cd /home/yefimov/project/myrpc/build && $(MAKE) -f CMakeFiles/Makefile2 example/callee/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/leslie/project/mprpc/build && $(MAKE) -f CMakeFiles/Makefile2 example/callee/preinstall
+	cd /home/yefimov/project/myrpc/build && $(MAKE) -f CMakeFiles/Makefile2 example/callee/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/leslie/project/mprpc/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/yefimov/project/myrpc/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 example/callee/CMakeFiles/provider.dir/rule:
-	cd /home/leslie/project/mprpc/build && $(MAKE) -f CMakeFiles/Makefile2 example/callee/CMakeFiles/provider.dir/rule
+	cd /home/yefimov/project/myrpc/build && $(MAKE) -f CMakeFiles/Makefile2 example/callee/CMakeFiles/provider.dir/rule
 .PHONY : example/callee/CMakeFiles/provider.dir/rule
 
 # Convenience name for target.
@@ -122,35 +122,35 @@ provider: example/callee/CMakeFiles/provider.dir/rule
 
 # fast build rule for target.
 provider/fast:
-	cd /home/leslie/project/mprpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/build
+	cd /home/yefimov/project/myrpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/build
 .PHONY : provider/fast
 
-__/user.pb.o: __/user.pb.cc.o
+__/entrywebserver.pb.o: __/entrywebserver.pb.cc.o
 
-.PHONY : __/user.pb.o
+.PHONY : __/entrywebserver.pb.o
 
 # target to build an object file
-__/user.pb.cc.o:
-	cd /home/leslie/project/mprpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/__/user.pb.cc.o
-.PHONY : __/user.pb.cc.o
+__/entrywebserver.pb.cc.o:
+	cd /home/yefimov/project/myrpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/__/entrywebserver.pb.cc.o
+.PHONY : __/entrywebserver.pb.cc.o
 
-__/user.pb.i: __/user.pb.cc.i
+__/entrywebserver.pb.i: __/entrywebserver.pb.cc.i
 
-.PHONY : __/user.pb.i
+.PHONY : __/entrywebserver.pb.i
 
 # target to preprocess a source file
-__/user.pb.cc.i:
-	cd /home/leslie/project/mprpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/__/user.pb.cc.i
-.PHONY : __/user.pb.cc.i
+__/entrywebserver.pb.cc.i:
+	cd /home/yefimov/project/myrpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/__/entrywebserver.pb.cc.i
+.PHONY : __/entrywebserver.pb.cc.i
 
-__/user.pb.s: __/user.pb.cc.s
+__/entrywebserver.pb.s: __/entrywebserver.pb.cc.s
 
-.PHONY : __/user.pb.s
+.PHONY : __/entrywebserver.pb.s
 
 # target to generate assembly for a file
-__/user.pb.cc.s:
-	cd /home/leslie/project/mprpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/__/user.pb.cc.s
-.PHONY : __/user.pb.cc.s
+__/entrywebserver.pb.cc.s:
+	cd /home/yefimov/project/myrpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/__/entrywebserver.pb.cc.s
+.PHONY : __/entrywebserver.pb.cc.s
 
 userservice.o: userservice.cc.o
 
@@ -158,7 +158,7 @@ userservice.o: userservice.cc.o
 
 # target to build an object file
 userservice.cc.o:
-	cd /home/leslie/project/mprpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/userservice.cc.o
+	cd /home/yefimov/project/myrpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/userservice.cc.o
 .PHONY : userservice.cc.o
 
 userservice.i: userservice.cc.i
@@ -167,7 +167,7 @@ userservice.i: userservice.cc.i
 
 # target to preprocess a source file
 userservice.cc.i:
-	cd /home/leslie/project/mprpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/userservice.cc.i
+	cd /home/yefimov/project/myrpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/userservice.cc.i
 .PHONY : userservice.cc.i
 
 userservice.s: userservice.cc.s
@@ -176,7 +176,7 @@ userservice.s: userservice.cc.s
 
 # target to generate assembly for a file
 userservice.cc.s:
-	cd /home/leslie/project/mprpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/userservice.cc.s
+	cd /home/yefimov/project/myrpc/build && $(MAKE) -f example/callee/CMakeFiles/provider.dir/build.make example/callee/CMakeFiles/provider.dir/userservice.cc.s
 .PHONY : userservice.cc.s
 
 # Help Target
@@ -188,9 +188,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... provider"
-	@echo "... __/user.pb.o"
-	@echo "... __/user.pb.i"
-	@echo "... __/user.pb.s"
+	@echo "... __/entrywebserver.pb.o"
+	@echo "... __/entrywebserver.pb.i"
+	@echo "... __/entrywebserver.pb.s"
 	@echo "... userservice.o"
 	@echo "... userservice.i"
 	@echo "... userservice.s"
@@ -205,6 +205,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/leslie/project/mprpc/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/yefimov/project/myrpc/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

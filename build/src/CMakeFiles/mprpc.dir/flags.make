@@ -6,5 +6,5 @@ CXX_FLAGS = -g
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/leslie/project/mprpc/src/include -I/home/leslie/project/mprpc/example 
+CXX_INCLUDES = -I/usr/local/include/nacos -I/home/yefimov/project/myrpc/src/include -I/home/yefimov/project/myrpc/example 
 
